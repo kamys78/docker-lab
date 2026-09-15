@@ -391,6 +391,11 @@ jobs:
 - How would you speed up a slow pipeline? → Dependency caching (`actions/cache`), parallel jobs, smaller base images, `paths:` filters to skip irrelevant runs.
 - Why test DB connectivity in CI, not just that the container starts? → A container "running" doesn't mean the app is functionally correct — end-to-end checks catch real integration failures.
 
+
+BUILD & TEST JOB
+<img width="2218" height="1424" alt="image" src="https://github.com/user-attachments/assets/e4550ab5-3cfe-4083-8b8a-f2f10176af7d" />
+
+
 ---
 
 *Built hands-on, from scratch, no forked repos — every file, config, and bug in this handbook was created and debugged directly.*
