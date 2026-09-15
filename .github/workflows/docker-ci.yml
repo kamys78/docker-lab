@@ -1,0 +1,42 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t flask-app:ci ./app
+
+      - name: Start app + db with Compose
+        run: docker compose up -d --build
+
+      - name: Wait for app to be healthy
+        run: |
+          for i in {1..10}; do
+            if curl -sf http://localhost:5001/db-check; then
+              echo "App is healthy"
+              exit 0
+            fi
+            echo "Waiting for app... attempt $i"
+            sleep 3
+          done
+          echo "App never became healthy"
+          exit 1
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
