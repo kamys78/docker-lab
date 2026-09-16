@@ -49,3 +49,25 @@ jobs:
       - name: Tear down
         if: always()
         run: docker compose down -v
+
+  python-version-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -r app/requirements.txt
+
+      - name: Run basic import check
+        run: python -c "import flask; import psycopg2; print('Imports OK on Python ${{ matrix.python-version }}')"
